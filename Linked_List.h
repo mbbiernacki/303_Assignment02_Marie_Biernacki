@@ -7,10 +7,12 @@
 
 using namespace std;
 
+//using templates to make linked list more versatile
+
 template <typename T>
 struct Item_Type {
 
-	//using integer as Item_Type to test linked list functionality
+	//Item_Type constructor
 	T data;
 	Item_Type(T data) : data(data) {}
 
@@ -23,6 +25,9 @@ struct Item_Type {
 
 template <typename T>
 struct Node {
+	
+	//each node will hold nodeData of Item_Type and a pointer to the next node
+
 	Item_Type<T> nodeData;
 	Node<T>* next;
 
@@ -34,6 +39,8 @@ struct Node {
 template<typename T>
 class Linked {
 protected:
+
+	//initializing head pointer, tail pointer, and num_items
 	Node<T>* head;
 	Node<T>* tail;
 	int num_items;
@@ -46,7 +53,7 @@ public:
 	Linked(Item_Type<T> d) {
 		Node<T>* tempPtr = new Node<T>(d);
 		head = tail = tempPtr;
-		num_items = 1; //FIXME make sure this isn't messing it up
+		num_items = 1;
 	}
 
 	//destructor to empty list
@@ -60,8 +67,11 @@ public:
 		num_items = 0;
 	}
 
+
 	//inserts a copy of item as first element of list
 	void push_front(const Item_Type<T>& item) {
+		
+		//declare newNode, assign the next pointer of newNode to the head, head is now the newNode
 		Node<T>* newNode = new Node<T>(item);
 		newNode->next = head;
 		head = newNode;
@@ -70,74 +80,90 @@ public:
 		if (tail == nullptr)
 				tail = newNode;
 
-		num_items++;
+		num_items++; //increase num_items
 		
 	}
 
 	//adds copy of item to end of list
 	void push_back(const Item_Type<T>& item) {
+		
+		//declare newNode
 		Node<T>* newNode = new Node<T>(item);
+		
+		//if the list was empty, both head and tail are assigned to newNode
 		if (head == nullptr) {
 			head = newNode;
 			tail = newNode;
 		}
 		else {
+			//otherwise, set the tail's next pointer to newNode, reassign the tail to the newNode
 			tail->next = newNode;
 			tail = newNode;
 		}
 
-		num_items++;
+		num_items++; //increase num_items
 	}
 
 	//removes first item from list
 	void pop_front() {
+		//check if the list is empty
 		if (head == nullptr)
 			throw std::invalid_argument("ERROR: pop_front() called on empty list");
-
+		
+		//set removed_node to head, then reassign head to the next node
 		Node<T>* removed_node = head;
 		head = head->next;
 
-		//update tail to nullptr if there was only one node to be deleted
+		//after updating head to head->next, if head is now null, update tail to null
 		if (head == nullptr)
 			tail = nullptr;
 
-		delete removed_node;
+		delete removed_node; //delete removed_node and decrease num_items
 		num_items--;
 	}
 
 	//removes last item from list
 	void pop_back() {
+		
+		//check if list is empty
 		if (head == nullptr)
 			throw std::invalid_argument("ERROR: pop_back() called on empty list");
-
+		
+		//check if head is the last item in the list, delete if true
 		if (head->next == nullptr) {
 			delete head;
 			head = nullptr;
 			tail = nullptr;
 		}
+
 		else {
+			
+			//create a tempPtr to iterate through the linked list until the tail is found
 			Node<T>* tempPtr = head;
 			while (tempPtr->next->next != nullptr) {
 				tempPtr = tempPtr->next;
 			}
-			delete tempPtr->next;
+			delete tempPtr->next; 
 			tempPtr->next = nullptr;
 			tail = tempPtr;
 		}
 
-		num_items--;
+		num_items--; //decrease num_items
 	
 	} 
 
 	//returns first element in the list
 	Item_Type<T>& front() {
+		//check if list is empty
 		if (head == nullptr)
 			throw std::invalid_argument("ERROR: front() called on empty list");
+		
 		return head->nodeData;
 	}
 
 	//returns the last element in the list
 	Item_Type<T>& back() {
+		//check if list is empty
 		if (head == nullptr)
 			throw std::invalid_argument("ERROR: back() called on empty list");
 
@@ -146,6 +172,7 @@ public:
 
 	//returns true if list is empty
 	bool empty() {
+		//if head is null (empty) return true, otherwise returns false
 		if (head == nullptr)
 			return true;
 		return false;
@@ -155,13 +182,16 @@ public:
 	//inserts item at position index (starting at 0)
 	//inserts at the end if the index is beyond the end of the list
 	void insert(size_t index, const Item_Type<T>& item) {
+		
+		//check if list is empty (cant insert on an empty list)
 		if (head == nullptr)
 			throw std::invalid_argument("ERROR: insert() called on empty list");
 
 		Node<T>* newNode = new Node<T>(item);
 
+		//if the index is 0, add the item to the front
 		if (index == 0)
-			push_front(item);
+			push_front(item); 
 
 		//if the index is greater than the size of the list, call push_back to add to end
 		else if (index >= num_items) {
@@ -171,6 +201,7 @@ public:
 
 		else {
 
+			//otherwise create a tempPtr to iterate through the linked list until the appropriate index is found
 			Node<T>* temp = head;
 
 			for (size_t i = 0; i < index - 1; i++) {
@@ -184,7 +215,7 @@ public:
 				tail = newNode;
 			}
 
-			num_items++;
+			num_items++; //increase num_items
 
 		}
 	
@@ -194,23 +225,28 @@ public:
 	//return TRUE if successful 
 	//return FALSE if index is beyond the end of the list
 	bool remove(size_t index) {
+		//check if list is empty
 		if (head == nullptr)
 			throw std::invalid_argument("ERROR: remove() called on empty list");
-
+		
+		//if index is greater than the size of the list, return false
 		if (index >= num_items)
 			return false;
 
+		//if index is 0, remove the front, return true
 		else if (index == 0) {
 			pop_front();
 			return true;
 		}
 
+		//if index is equal to the last index value, remove the back, return true
 		else if (index == num_items - 1) {
 			pop_back();
 			return true;
 		}
 
 		else {
+			//otherwise create a temp pointer to iterate through the list until the index value is found, delete and return true
 
 			Node<T>* temp = head;
 			Node<T>* prev = nullptr; //used to point to node to be deleted
@@ -224,7 +260,7 @@ public:
 			delete temp;
 			temp = nullptr;
 
-			num_items--;
+			num_items--; //decrease num_items
 
 			return true;
 
@@ -236,33 +272,36 @@ public:
 	//return the position of the first occurrence of item if it is found
 	//return the size of the list if it is not found
 	size_t find(const Item_Type<T>& item) {
+		
+		//check if list is empty
 		if (head == nullptr)
 			throw std::invalid_argument("ERROR: find() called on empty list");
-
+		
+		//check if the data is located at the head (index 0)
 		if (head->nodeData == item) {
 			return 0;
 		}
 
-
+		//otherwise create a temp pointer to iterate through the list
 		Node<T>* temp = head;
 
 		for (size_t i = 0; i < num_items; i++) {
 
 			if (temp->nodeData == item) {
-				return i;
+				return i; //return index value of the item
 			}
 			else {
 				temp = temp->next;
 			}
 		}
-		return num_items;
+		return num_items; //if not found after iteration, return the size of the list
 
 	
 	}
 
 
 
-	//FIXME: below functions for testing only
+	//printList iterates through list and prints the data at each node
 	void printList() {
 		Node<T>* tempPtr = head;
 		while (tempPtr != nullptr) {
@@ -272,6 +311,8 @@ public:
 		cout << endl;
 	}
 
+
+	//returns the value of num_items
 	int getNumItems() const {
 		return num_items;
 	}

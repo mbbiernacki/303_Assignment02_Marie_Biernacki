@@ -19,7 +19,10 @@ int& Stack::top() {
 } //returns the value of the top of the stack
 
 double Stack::average() {
-
+	
+	//finds and returns the average of the numbers in the stack
+	
+	//check if stack is empty
 	if (stackVector.empty())
 		return 0;
 	
@@ -28,6 +31,7 @@ double Stack::average() {
 	for (int i = 0; i < stackVector.size(); i++) {
 		total += stackVector.at(i);
 	}
-
+	
+	//use static_cast to ensure average is calculated correctly
 	return static_cast<double>(total) / stackVector.size();
-} //finds and returns the average of the numbers in the stack
+} 

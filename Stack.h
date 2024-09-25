@@ -8,7 +8,7 @@ using namespace std;
 class Stack {
 
 protected:
-	vector<int>stackVector;
+	vector<int>stackVector; //create vector of int
 
 public:
 
@@ -23,7 +23,7 @@ public:
 	double average(); //finds and returns the average of the numbers in the stack
 
 
-	//FIXME for testing purposes only -- print the stack
+	//print function to showcase functionality
 	void printStack() {
 
 		for (int i = stackVector.size() - 1; i >= 0; i--) {
