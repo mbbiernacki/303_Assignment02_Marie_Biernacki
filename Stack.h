@@ -22,16 +22,8 @@ public:
 
 	double average(); //finds and returns the average of the numbers in the stack
 
-
-	//print function to showcase functionality
-	void printStack() {
-
-		for (int i = stackVector.size() - 1; i >= 0; i--) {
-			cout << stackVector.at(i) << " ";
-		}
-
-		cout << endl;
-	}
+	
+	void printStack(); //print function to showcase stack functionality
 
 };
 

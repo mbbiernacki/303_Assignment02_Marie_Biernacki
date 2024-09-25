@@ -35,3 +35,14 @@ double Stack::average() {
 	//use static_cast to ensure average is calculated correctly
 	return static_cast<double>(total) / stackVector.size();
 } 
+
+void Stack::printStack() {
+	
+	//iterate through stack and print the values
+
+	for (int i = stackVector.size() - 1; i >= 0; i--) {
+		cout << stackVector.at(i) << " ";
+	}
+
+	cout << endl;
+}

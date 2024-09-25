@@ -17,7 +17,7 @@ struct Item_Type {
 	Item_Type(T data) : data(data) {}
 
 
-	//operator == defined for use in find() function to compare when numbers are equivalent
+	//operator == defined for use in find() function to compare when values are equivalent
 	bool operator==(const Item_Type& other) const {
 		return this->data == other.data;
 	}
@@ -107,33 +107,39 @@ public:
 	//removes first item from list
 	void pop_front() {
 		//check if the list is empty
-		if (head == nullptr)
-			throw std::invalid_argument("ERROR: pop_front() called on empty list");
+		if (head == nullptr) {
+			cout << "ERROR: pop_front() called on empty list" << endl;
+		}
+		else {
+			
+			//set removed_node to head, then reassign head to the next node
+			Node<T>* removed_node = head;
+			head = head->next;
+
+			//after updating head to head->next, if head is now null, update tail to null
+			if (head == nullptr)
+				tail = nullptr;
+
+			delete removed_node; //delete removed_node and decrease num_items
+			num_items--;
+		}
 		
-		//set removed_node to head, then reassign head to the next node
-		Node<T>* removed_node = head;
-		head = head->next;
-
-		//after updating head to head->next, if head is now null, update tail to null
-		if (head == nullptr)
-			tail = nullptr;
-
-		delete removed_node; //delete removed_node and decrease num_items
-		num_items--;
 	}
 
 	//removes last item from list
 	void pop_back() {
 		
 		//check if list is empty
-		if (head == nullptr)
-			throw std::invalid_argument("ERROR: pop_back() called on empty list");
-		
+		if (head == nullptr) {
+			cout << "ERROR: pop_back() called on empty list" << endl;
+		}
 		//check if head is the last item in the list, delete if true
-		if (head->next == nullptr) {
+		else if (head->next == nullptr) {
 			delete head;
 			head = nullptr;
 			tail = nullptr;
+
+			num_items--; //decrease num_items
 		}
 
 		else {
@@ -146,28 +152,35 @@ public:
 			delete tempPtr->next; 
 			tempPtr->next = nullptr;
 			tail = tempPtr;
+
+			num_items--; //decrease num_items
 		}
 
-		num_items--; //decrease num_items
+		
 	
 	} 
 
 	//returns first element in the list
 	Item_Type<T>& front() {
 		//check if list is empty
-		if (head == nullptr)
-			throw std::invalid_argument("ERROR: front() called on empty list");
-		
-		return head->nodeData;
+		if (head == nullptr) {
+			cout << "ERROR: front() called on empty list" << endl;
+		}
+		else {
+			return head->nodeData;
+		}
 	}
 
 	//returns the last element in the list
 	Item_Type<T>& back() {
 		//check if list is empty
-		if (head == nullptr)
-			throw std::invalid_argument("ERROR: back() called on empty list");
-
-		return tail->nodeData;
+		if (head == nullptr) {
+			cout << "ERROR: back() called on empty list" << endl;
+		}
+		else {
+			return tail->nodeData;
+		}
+		
 	}
 
 	//returns true if list is empty
@@ -184,41 +197,45 @@ public:
 	void insert(size_t index, const Item_Type<T>& item) {
 		
 		//check if list is empty (cant insert on an empty list)
-		if (head == nullptr)
-			throw std::invalid_argument("ERROR: insert() called on empty list");
-
-		Node<T>* newNode = new Node<T>(item);
-
-		//if the index is 0, add the item to the front
-		if (index == 0)
-			push_front(item); 
-
-		//if the index is greater than the size of the list, call push_back to add to end
-		else if (index >= num_items) {
-			push_back(item);
-
+		if (head == nullptr && index != 0) {
+			cout<< "ERROR: insert() called on empty list" << endl;
 		}
-
 		else {
+			Node<T>* newNode = new Node<T>(item);
 
-			//otherwise create a tempPtr to iterate through the linked list until the appropriate index is found
-			Node<T>* temp = head;
+			//if the index is 0, add the item to the front
+			if (index == 0)
+				push_front(item);
 
-			for (size_t i = 0; i < index - 1; i++) {
-				temp = temp->next;
+			//if the index is greater than the size of the list, add item to the end
+			else if (index >= num_items) {
+				push_back(item);
+
 			}
 
-			newNode->next = temp->next;
-			temp->next = newNode;
+			else {
 
-			if (newNode->next == nullptr) {
-				tail = newNode;
+				//otherwise create a tempPtr to iterate through the linked list until the appropriate index is found
+				Node<T>* temp = head;
+
+				for (size_t i = 0; i < index - 1; i++) {
+					temp = temp->next;
+				}
+
+				newNode->next = temp->next;
+				temp->next = newNode;
+
+				if (newNode->next == nullptr) {
+					tail = newNode;
+				}
+
+				num_items++; //increase num_items
+
 			}
-
-			num_items++; //increase num_items
 
 		}
-	
+
+		
 	}
 	
 	//remove item at position index
@@ -226,13 +243,17 @@ public:
 	//return FALSE if index is beyond the end of the list
 	bool remove(size_t index) {
 		//check if list is empty
-		if (head == nullptr)
-			throw std::invalid_argument("ERROR: remove() called on empty list");
-		
+		if (head == nullptr) {
+			cout << "ERROR: remove() called on empty list" << endl;
+		}
+			
 		//if index is greater than the size of the list, return false
-		if (index >= num_items)
+		else if (index >= num_items) {
+		
 			return false;
-
+		
+		}
+			
 		//if index is 0, remove the front, return true
 		else if (index == 0) {
 			pop_front();
@@ -274,28 +295,31 @@ public:
 	size_t find(const Item_Type<T>& item) {
 		
 		//check if list is empty
-		if (head == nullptr)
-			throw std::invalid_argument("ERROR: find() called on empty list");
+		if (head == nullptr) {
+			cout << "ERROR: find() called on empty list" << endl;
+
+		}
 		
-		//check if the data is located at the head (index 0)
-		if (head->nodeData == item) {
+		else if (head->nodeData == item) { 
+			//check if the data is located at the head (index 0)
 			return 0;
 		}
+		else {
+			//otherwise create a temp pointer to iterate through the list
+			Node<T>* temp = head;
 
-		//otherwise create a temp pointer to iterate through the list
-		Node<T>* temp = head;
+			for (size_t i = 0; i < num_items; i++) {
 
-		for (size_t i = 0; i < num_items; i++) {
-
-			if (temp->nodeData == item) {
-				return i; //return index value of the item
+				if (temp->nodeData == item) {
+					return i; //return index value of the item
+				}
+				else {
+					temp = temp->next;
+				}
 			}
-			else {
-				temp = temp->next;
-			}
+			return num_items; //if not found after iteration, return the size of the list
 		}
-		return num_items; //if not found after iteration, return the size of the list
-
+		
 	
 	}
 
