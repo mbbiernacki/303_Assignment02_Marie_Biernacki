@@ -20,7 +20,7 @@ int main() {
 
     //test empty
     cout << "\n--- TESTING ON EMPTY LIST ---" << endl;
-    cout << "\nIs the list empty? " << (list.empty() ? "Yes" : "No") << endl; // Expected output: yes
+    cout << "\nIs the list empty? " << (list.empty() ? "Yes" : "No") << endl; //expected: yes
 
     cout << "\nTesting pop_front and pop_back..." << endl;
     list.pop_front(); //expected: error message
@@ -65,7 +65,7 @@ int main() {
     cout << "\nRemoving index 5..." << endl;
     list.remove(5);
     cout << "Current List: ";
-    list.printList(); //expected: 333 50 666 1000, stays the same
+    list.printList(); //expected: 333 50 666 1000, stays the same when index is out of bounds
 
     cout << "\nRemoving index 0..." << endl;
     list.remove(0); 
@@ -123,7 +123,10 @@ int main() {
     cout << "Current List (after pop_back): "; //expected: 10 5 50 5 
     list.printList();
 
+
+
     cout << "\n\n--- TESTING REMOVE AND FIND ---" << endl;
+
     cout << "\nCurrent List: "; //expected: 10 5 50 5 
     list.printList();
     

@@ -336,7 +336,7 @@ public:
 	}
 
 
-	//returns the value of num_items
+	//returns the value of num_items for testing purposes
 	int getNumItems() const {
 		return num_items;
 	}
